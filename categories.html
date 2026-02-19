@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Restaurant | Categories</title>
+    <link rel="stylesheet" href="./css/output.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body class="bg-main-bg text-main-text h-1250">
+    <div class="overlay fixed z-40 hidden h-full w-full bg-black/30"></div>
+    <header class="bg-main-bg fixed z-50 w-full shadow-2xs">
+      <div class="container flex h-15 items-center justify-between">
+        <div class="logo cursor-pointer">
+          <h1 class="text-primary text-2xl font-black">
+            <span class="text-main-text">MY</span> Restaurant
+          </h1>
+        </div>
+        <nav>
+          <ul
+            class="bg-main-bg absolute top-full right-0 z-51 h-screen w-[50%] translate-x-full duration-300 md:static md:flex md:h-auto md:w-auto md:translate-x-0 md:bg-transparent"
+          >
+            <li><a href="/index.html">Home</a></li>
+            <li class="active md:border-primary md:border-b-2">
+              <a href="/categories.html">Categories</a>
+            </li>
+            <li><a href="/about.html">About</a></li>
+          </ul>
+        </nav>
+        <div class="tools flex gap-2.5 text-xl">
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <div class="cart relative cursor-pointer">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span
+              class="bg-primary absolute -top-2.5 -right-2.5 flex h-5 w-5 items-center justify-center rounded-full text-[12px] font-bold text-white"
+            >
+              0
+            </span>
+          </div>
+          <div class="menu md:hidden">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Restaurant | Home</title>
+    <link rel="stylesheet" href="./css/output.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body class="bg-main-bg text-main-text">
+    <!-- OverLay -->
+    <div class="overlay fixed z-40 hidden h-full w-full bg-black/30"></div>
+
+    <!-- Header -->
+    <header class="bg-main-bg fixed z-50 w-full shadow-2xs">
+      <div class="container flex h-15 items-center justify-between">
+        <div class="logo cursor-pointer">
+          <h1 class="text-primary text-2xl font-black">
+            <span class="text-main-text">MY</span> Restaurant
+          </h1>
+        </div>
+        <nav>
+          <ul
+            class="bg-main-bg absolute top-full right-0 z-51 h-screen w-[70%] translate-x-full duration-300 md:static md:flex md:h-auto md:w-auto md:translate-x-0 md:bg-transparent"
+          >
+            <li class="active md:border-primary md:border-b-2">
+              <a href="#">Home</a>
+            </li>
+            <li><a href="/categories.html">Categories</a></li>
+            <li><a href="/about.html">About</a></li>
+          </ul>
+        </nav>
+        <div class="tools flex gap-2.5 text-xl">
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <div class="cart relative cursor-pointer">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span
+              class="bg-primary absolute -top-2.5 -right-2.5 flex h-5 w-5 items-center justify-center rounded-full text-[12px] font-bold text-white"
+            >
+              0
+            </span>
+          </div>
+          <div class="menu md:hidden">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Spacer for Header -->
+    <div class="spacer h-15"></div>
+
+    <!-- Hero -->
+    <div class="hero flex flex-col py-15">
+      <div
+        class="container grid h-full flex-1 grid-cols-1 gap-5 md:grid-cols-2"
+      >
+        <div
+          class="content md:flex md:flex-col md:items-center md:justify-center"
+        >
+          <div class="text">
+            <h2 class="mb-5 text-center text-3xl font-black md:text-left">
+              Experience The Real Taste Of
+              <span class="text-primary">Quality</span> Food
+            </h2>
+            <p
+              class="text-main-text/70 mb-5 text-justify text-base leading-[1.7]"
+            >
+              We serve the best meals in town with fresh ingredients and a touch
+              of magic. Order now and enjoy a premium dining experience at your
+              doorstep.
+            </p>
+          </div>
+          <button
+            class="cta-btn bg-primary md:bg-primary/80 md:hover:bg-primary text-main-bg mx-auto block rounded-2xl px-5 py-1.5 shadow-[0_1px_5px_0_#4f46e5] transition-colors duration-300"
+          >
+            Order Now
+          </button>
+        </div>
+        <div class="image flex items-center justify-center">
+          <img
+            class="aspect-square w-[75%] rounded-2xl object-cover transition-opacity duration-1000"
+            src="./image/hero-img1.jpg"
+            alt=""
+            id="hero-image"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Meals -->
+    <main id="meals" class="meals scroll-mt-20 py-15">
+      <div class="container">
+        <div class="text mb-15 flex flex-col">
+          <h2 class="mb-5 text-center text-2xl font-bold">
+            Our <span class="text-primary">Special</span> Meals
+          </h2>
+          <p class="text-main-text/70 text-justify md:text-center">
+            From our kitchen to your heart, explore a wide variety of meals
+            prepared by top chefs using authentic recipes and fresh farm
+            produce.
+          </p>
+        </div>
+        <div
+          class="focus-within:ring-primary search-meals mx-auto mb-5 flex w-full items-center justify-center rounded-full px-5 py-2 shadow-[0_4px_15px_-3px_rgba(79,70,229,0.4)] transition-all duration-300 focus-within:shadow-none focus-within:ring-2 md:w-[50%]"
+        >
+          <input
+            type="text"
+            id="search"
+            class="flex-1 focus:outline-0"
+            placeholder="Search Your Meal"
+          />
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div
+          class="filter-search no-scrollbar bg-primary/50 mx-auto flex w-full max-w-fit flex-nowrap overflow-x-auto rounded-full"
+        >
+          <button id="All" class="filter-btn active-filter">All</button>
+          <button id="Breakfast" class="filter-btn">Breakfast</button>
+          <button id="Chicken" class="filter-btn">Chicken</button>
+          <button id="Beef" class="filter-btn">Beef</button>
+          <button id="Seafood" class="filter-btn">Seafood</button>
+          <button id="Dessert" class="filter-btn">Dessert</button>
+        </div>
+        <div
+          class="meals-container mt-15 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4"
+        ></div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer></footer>
+    <div
+      class="cart-modal fixed top-1/2 left-1/2 z-50 w-[90%] -translate-1/2 scale-0 rounded-3xl bg-white p-5 text-center opacity-0 shadow-lg transition-transform duration-300 md:w-[50%]"
+    >
+      <div class="head">
+        <span
+          class="close absolute -top-2 -right-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-red-500 font-black text-white shadow-2xl"
+          >X</span
+        >
+        <h2 class="text-main-text mb-3 text-2xl font-black">
+          Shopping Cart (<span class="text-primary"> 0 </span>)
+        </h2>
+      </div>
+      <div class="body max-h-[50vh] overflow-y-auto p-2"></div>
+      <div class="footer p-2">
+        <div class="reciept mb-2.5 flex items-center justify-between">
+          <h3 class="text-2xl font-bold">Total</h3>
+          <p class="text-primary text-2xl font-black">0$</p>
+        </div>
+        <button class="bg-primary w-full rounded-2xl py-3 text-white shadow-lg">
+          Checkout
+        </button>
+      </div>
+    </div>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
