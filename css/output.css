@@ -1232,6 +1232,11 @@
       justify-content: center;
     }
   }
+  .md\:gap-12 {
+    @media (width >= 48rem) {
+      gap: calc(var(--spacing) * 12);
+    }
+  }
   .md\:border-b-2 {
     @media (width >= 48rem) {
       border-bottom-style: var(--tw-border-style);
