@@ -247,20 +247,18 @@ function showProduct(id) {
           <img
             src="${myProduct.strMealThumb}"
             alt="${myProduct.strMeal}"
-            class="rounded-2xl shadow-md md:w-[50%]"
+            class="rounded-2xl shadow-md w-[80%] md:w-[50%]"
           />
           <div class="data flex flex-col justify-between md:px-5">
-            <div
-              class="top flex items-center justify-between gap-3 pt-5 pb-2 text-2xl font-black"
-            >
+            <div class="top flex items-center justify-between gap-3 pt-5 pb-2 text-xl md:text-2xl font-black">
               <h3>${myProduct.strMeal}</h3>
               <p class="text-primary">${myProduct.price}$</p>
             </div>
-            <p class="text-primary/70 font-bold text-justify">
+            <p class="text-primary/70 md:font-bold text-justify">
               ${myProduct.description}
             </p>
             <div class="info my-2 flex items-center justify-between">
-              <p class="font-bold bg-indigo-100 text-primary p-2 rounded-2xl">${myProduct.categoryName}</p>
+              <p class="bg-indigo-100 text-primary p-2 rounded-2xl">${myProduct.categoryName}</p>
               <div class="text-secondary flex items-center gap-1 text-sm">
                 <i class="fa-solid fa-star"></i>
                 <span class="text-main-text font-bold">${myProduct.rating}</span>
@@ -268,13 +266,9 @@ function showProduct(id) {
             </div>
           </div>
         </div>
-        <button
-          class="order-now-btn group/btn bg-primary hover:bg-primary/90 shadow-primary/30 flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-bold text-white shadow-lg transition-all active:scale-95"
-        >
-          <i
-            class="fa-solid fa-cart-shopping transition-transform group-hover/btn:-rotate-12"
-          ></i
-          >Order Now
+        <button class="order-now-btn group/btn bg-primary hover:bg-primary/90 shadow-primary/30 flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-bold text-white shadow-lg transition-all active:scale-95">
+          <i class="fa-solid fa-cart-shopping transition-transform group-hover/btn:-rotate-12"></i>
+          Order Now
         </button>
   `;
 }
