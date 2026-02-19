@@ -219,7 +219,7 @@ setInterval(() => {
   heroImage.style.opacity = 0;
   setTimeout(() => {
     count = (count + 1) % heroImagesSrc.length;
-    heroImage.src = `../image/${heroImagesSrc[count]}`;
+    heroImage.src = `./image/${heroImagesSrc[count]}`;
     heroImage.style.opacity = 1;
   }, 500);
 }, 3000);
