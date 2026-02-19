@@ -13,6 +13,11 @@ const filterBtns = document.querySelectorAll(".filter-search button");
 const mealsContainer = document.querySelector(".meals-container");
 const choosePageContainer = document.querySelector(".choose-page");
 const cartModal = document.querySelector(".cart-modal");
+const mealModal = document.querySelector(".meal-modal");
+const closeProduct = document.querySelector(".meal-modal .close");
+const productContainer = document.querySelector(
+  ".meal-modal .product-container",
+);
 const closeCart = document.querySelector(".cart-modal .close");
 const cartCountHead = document.querySelector(".cart-modal .head .cart-count");
 const cartBody = document.querySelector(".cart-modal .body");
@@ -64,6 +69,8 @@ function closeEverything() {
   navUl.classList.add("translate-x-full");
   cartModal.classList.add("scale-0", "opacity-0");
   cartModal.classList.remove("scale-100", "opacity-100");
+  mealModal.classList.add("scale-0", "opacity-0");
+  mealModal.classList.remove("scale-100", "opacity-100");
 }
 function pageNumbersDisplay(allMeals) {
   const totalPages = Math.ceil(allMeals / mealsPerPage);
@@ -87,7 +94,11 @@ function pageNumbersDisplay(allMeals) {
   `;
   choosePageContainer.innerHTML = pageBtn;
 }
-
+function toggleModal(modalName) {
+  Overlay.classList.remove("hidden");
+  modalName.classList.replace("scale-0", "scale-100");
+  modalName.classList.replace("opacity-0", "opacity-100");
+}
 // Draw & Update Data
 async function getMeals() {
   // PlaceHolder
@@ -228,6 +239,45 @@ function displayCart() {
     cartTotal.innerHTML = `0$`;
   }
 }
+function showProduct(id) {
+  let myProduct = allMeals.find((e) => e.idMeal === id);
+  productContainer.id = id;
+  productContainer.innerHTML = `
+          <div class="content p-2 md:mb-5 md:flex">
+          <img
+            src="${myProduct.strMealThumb}"
+            alt="${myProduct.strMeal}"
+            class="rounded-2xl shadow-md md:w-[50%]"
+          />
+          <div class="data flex flex-col justify-between md:px-5">
+            <div
+              class="top flex items-center justify-between gap-3 pt-5 pb-2 text-2xl font-black"
+            >
+              <h3>${myProduct.strMeal}</h3>
+              <p class="text-primary">${myProduct.price}$</p>
+            </div>
+            <p class="text-primary/70 font-bold text-justify">
+              ${myProduct.description}
+            </p>
+            <div class="info my-2 flex items-center justify-between">
+              <p class="font-bold bg-indigo-100 text-primary p-2 rounded-2xl">${myProduct.categoryName}</p>
+              <div class="text-secondary flex items-center gap-1 text-sm">
+                <i class="fa-solid fa-star"></i>
+                <span class="text-main-text font-bold">${myProduct.rating}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          class="order-now-btn group/btn bg-primary hover:bg-primary/90 shadow-primary/30 flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-bold text-white shadow-lg transition-all active:scale-95"
+        >
+          <i
+            class="fa-solid fa-cart-shopping transition-transform group-hover/btn:-rotate-12"
+          ></i
+          >Order Now
+        </button>
+  `;
+}
 
 // Features Functions
 function search() {
@@ -306,7 +356,13 @@ setInterval(() => {
 MenuBtn.addEventListener("click", showMenu);
 Overlay.addEventListener("click", closeEverything);
 navLis.forEach((li) => {
-  li.addEventListener("click", showMenu);
+  li.addEventListener("click", () => {
+    navLis.forEach((li) =>
+      li.classList.remove("active", "md:border-primary", "md:border-b-2"),
+    );
+    li.classList.add("active", "md:border-primary", "md:border-b-2");
+    showMenu();
+  });
 });
 navSearch.addEventListener("click", () => {
   mealsSection.scrollIntoView({ behavior: "smooth" });
@@ -326,11 +382,15 @@ mealsContainer.addEventListener("click", (e) => {
     cart.push(btn.closest(".meal-card").id);
     syncCart();
   }
+  const card = e.target.closest(".meal-card");
+  if (card && !btn) {
+    toggleModal(mealModal);
+    showProduct(card.id);
+  }
 });
+closeProduct.addEventListener("click", closeEverything);
 cartBtn.addEventListener("click", () => {
-  Overlay.classList.remove("hidden");
-  cartModal.classList.replace("scale-0", "scale-100");
-  cartModal.classList.replace("opacity-0", "opacity-100");
+  toggleModal(cartModal);
   displayCart();
 });
 closeCart.addEventListener("click", closeEverything);
@@ -338,6 +398,13 @@ cartModal.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete-meal")) {
     let mealId = e.target.closest(".cart-card").id;
     removeFromCart(mealId);
+  }
+});
+productContainer.addEventListener("click", (e) => {
+  let btn = e.target.closest(".order-now-btn");
+  if (btn) {
+    cart.push(btn.closest(".product-container").id);
+    syncCart();
   }
 });
 checkOutCart.addEventListener("click", checkout);
