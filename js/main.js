@@ -11,6 +11,7 @@ const mealsSection = document.querySelector("#meals");
 const searchMeals = document.querySelector("#search");
 const filterBtns = document.querySelectorAll(".filter-search button");
 const mealsContainer = document.querySelector(".meals-container");
+const choosePageContainer = document.querySelector(".choose-page");
 const cartModal = document.querySelector(".cart-modal");
 const closeCart = document.querySelector(".cart-modal .close");
 const cartCountHead = document.querySelector(".cart-modal .head .cart-count");
@@ -35,6 +36,8 @@ const heroImagesSrc = [
 ];
 const categories = ["Breakfast", "Chicken", "Beef", "Seafood", "Dessert"];
 let currentCategory = "All";
+let currentPage = 1;
+const mealsPerPage = innerWidth < 768 ? 5 : 12;
 
 // Utility Fucntions
 function showMenu() {
@@ -61,6 +64,28 @@ function closeEverything() {
   navUl.classList.add("translate-x-full");
   cartModal.classList.add("scale-0", "opacity-0");
   cartModal.classList.remove("scale-100", "opacity-100");
+}
+function pageNumbersDisplay(allMeals) {
+  const totalPages = Math.ceil(allMeals / mealsPerPage);
+  let pageBtn = `
+      <button class="px-3 py-2 rounded-lg border transition-all ${currentPage === 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-primary hover:text-white"}" ${currentPage === 1 ? "disabled" : `onclick="changePage(${currentPage - 1})"`}>
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+  `;
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || (i >= currentPage - 1 && i <= currentPage + 1)) {
+      pageBtn += `
+      <button class="page-btn ${i === currentPage ? "bg-primary text-white" : ""} hover:bg-primary hover:text-white px-4 py-2 rounded-lg border duration-300" onclick="changePage(${i})">
+        ${i}
+      </button>`;
+    }
+  }
+  pageBtn += `
+      <button class="px-3 py-2 rounded-lg border transition-all ${currentPage === totalPages ? "opacity-30 cursor-not-allowed" : "hover:bg-primary hover:text-white "}" ${currentPage === totalPages ? "disabled" : `onclick="changePage(${currentPage + 1})"`}>
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+  `;
+  choosePageContainer.innerHTML = pageBtn;
 }
 
 // Draw & Update Data
@@ -119,8 +144,15 @@ async function getMeals() {
   }
 }
 function DrawMealsCards(allMeals) {
+  mealsContainer.innerHTML = "";
+
+  const start = (currentPage - 1) * mealsPerPage;
+  const end = start + mealsPerPage;
+
+  const selectedData = allMeals.slice(start, end);
   let mealsHtml = "";
-  allMeals.forEach((meal) => {
+
+  selectedData.forEach((meal) => {
     mealsHtml += `
           <div id="${meal.idMeal}" class="meal-card group hover:border-primary/20 overflow-hidden rounded-3xl border border-transparent bg-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
             <div class="relative overflow-hidden">
@@ -157,6 +189,7 @@ function DrawMealsCards(allMeals) {
       `;
   });
   mealsContainer.innerHTML = mealsHtml;
+  pageNumbersDisplay(allMeals.length);
 }
 function displayCart() {
   syncCart();
@@ -217,6 +250,7 @@ function search() {
       "fa-solid fa-magnifying-glass-minus",
       "text-gray-400",
     );
+    choosePageContainer.innerHTML = "";
   }
 }
 function filterCategory(btn) {
@@ -224,6 +258,7 @@ function filterCategory(btn) {
   btn.classList.add("active-filter");
   currentCategory = btn.id;
   searchMeals.value = "";
+  currentPage = 1;
   search();
 }
 function removeFromCart(mealId) {
@@ -251,6 +286,11 @@ function reset() {
   cart = [];
   syncCart();
 }
+function changePage(page) {
+  currentPage = page;
+  search();
+  mealsSection.scrollIntoView({ behavior: "smooth" });
+}
 
 // Hero Image Change
 setInterval(() => {
@@ -271,7 +311,10 @@ navLis.forEach((li) => {
 navSearch.addEventListener("click", () => {
   mealsSection.scrollIntoView({ behavior: "smooth" });
 });
-searchMeals.addEventListener("input", search);
+searchMeals.addEventListener("input", () => {
+  currentPage = 1;
+  search();
+});
 filterBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
     filterCategory(btn);
