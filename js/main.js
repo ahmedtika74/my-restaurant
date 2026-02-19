@@ -13,8 +13,13 @@ const filterBtns = document.querySelectorAll(".filter-search button");
 const mealsContainer = document.querySelector(".meals-container");
 const cartModal = document.querySelector(".cart-modal");
 const closeCart = document.querySelector(".cart-modal .close");
+const cartCountHead = document.querySelector(".cart-modal .head .cart-count");
 const cartBody = document.querySelector(".cart-modal .body");
 const cartTotal = document.querySelector(".cart-modal .footer p");
+const checkOutCart = document.querySelector(
+  ".cart-modal .action-btn .checkout",
+);
+const resetCart = document.querySelector(".cart-modal .action-btn .reset");
 
 // Variables for Hero Background
 let count = 0;
@@ -170,31 +175,32 @@ function search() {
 function displayCart() {
   cartBody.innerHTML = "";
   let cartHtml = "";
-  let newCartCheckout = [];
   let totalPrice = 0;
+  cartCountHead.innerHTML = ` ${cart.length} `;
   if (cart.length) {
     cart.forEach((id) => {
-      newCartCheckout.push(allMeals.find((e) => e.idMeal === id));
-    });
-    newCartCheckout.forEach((ele) => {
-      totalPrice += parseInt(ele.price);
-      cartHtml += `
-          <div id="${ele.idMeal}" class="cart-card mb-3 flex items-center justify-between rounded-2xl bg-gray-100 p-3">
-            <img src="${ele.strMealThumb}" alt="${ele.strMeal}" class="h-10 w-10 rounded-2xl md:h-20 md:w-20" />
+      const newCartCheckout = allMeals.find((e) => e.idMeal === id);
+      if (newCartCheckout) {
+        totalPrice += parseFloat(newCartCheckout.price);
+        cartHtml += `
+          <div id="${newCartCheckout.idMeal}" class="cart-card mb-3 flex items-center justify-between rounded-2xl bg-gray-100 p-3">
+            <img src="${newCartCheckout.strMealThumb}" alt="${newCartCheckout.strMeal}" class="h-10 w-10 rounded-2xl md:h-20 md:w-20" />
             <div class="data">
-              <h3 class="text-base font-bold md:text-xl">${ele.strMeal}</h3>
-              <span class="text-[14px] md:text-base">${ele.price}$</span>
+              <h3 class="text-base font-bold md:text-xl">${newCartCheckout.strMeal}</h3>
+              <span class="text-[14px] md:text-base">${newCartCheckout.price}$</span>
             </div>
             <button class="delete-meal flex h-7 w-7 items-center justify-center bg-red-500 font-black text-white">
               X
             </button>
           </div>
-    `;
+        `;
+      }
     });
     cartBody.innerHTML = cartHtml;
-    cartTotal.innerHTML = `${totalPrice}$`;
+    cartTotal.innerHTML = `${totalPrice.toFixed(2)}$`;
   } else {
     cartBody.innerHTML = `<p class="text-red-700 text-2xl font-bold">Your Cart Is Empty!</p>`;
+    cartTotal.innerHTML = `0$`;
   }
 }
 
@@ -262,11 +268,22 @@ closeCart.addEventListener("click", closeEverything);
 cartModal.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete-meal")) {
     let value = e.target.closest(".cart-card").id;
-    cart = cart.filter((e) => e !== value);
+    let deletedIndex = cart.indexOf(value);
+    if (deletedIndex > -1) {
+      cart.splice(deletedIndex, 1);
+    }
     localStorage.setItem("userCart", JSON.stringify(cart));
-    e.target.closest(".cart-card").remove();
-    cartItems.innerHTML = parseInt(cartItems.innerHTML) - 1;
+    cartItems.innerHTML = cart.length;
+    cartCountHead.innerHTML = ` ${cart.length} `;
+    displayCart();
   }
+});
+
+// Event To Reset Cart
+resetCart.addEventListener("click", () => {
+  cart = [];
+  localStorage.removeItem("userCart");
+  displayCart();
 });
 
 onload = () => {

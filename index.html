@@ -147,7 +147,7 @@
           >X</span
         >
         <h2 class="text-main-text mb-3 text-2xl font-black">
-          Shopping Cart (<span class="text-primary"> 0 </span>)
+          Shopping Cart (<span class="cart-count text-primary"> 0 </span>)
         </h2>
       </div>
       <div class="body max-h-[50vh] overflow-y-auto p-2"></div>
@@ -156,9 +156,18 @@
           <h3 class="text-2xl font-bold">Total</h3>
           <p class="text-primary text-2xl font-black">0$</p>
         </div>
-        <button class="bg-primary w-full rounded-2xl py-3 text-white shadow-lg">
-          Checkout
-        </button>
+        <div class="action-btn flex items-center justify-between">
+          <button
+            class="checkout bg-primary w-[48%] rounded-2xl py-3 text-white shadow-lg"
+          >
+            Checkout
+          </button>
+          <button
+            class="reset w-[48%] rounded-2xl bg-red-500 py-3 text-white shadow-lg hover:bg-red-700"
+          >
+            Reset
+          </button>
+        </div>
       </div>
     </div>
     <script src="./js/main.js"></script>
