@@ -15,13 +15,16 @@ const cartModal = document.querySelector(".cart-modal");
 const closeCart = document.querySelector(".cart-modal .close");
 const cartCountHead = document.querySelector(".cart-modal .head .cart-count");
 const cartBody = document.querySelector(".cart-modal .body");
+const cartFooter = document.querySelector(".cart-modal .footer");
 const cartTotal = document.querySelector(".cart-modal .footer p");
 const checkOutCart = document.querySelector(
   ".cart-modal .action-btn .checkout",
 );
 const resetCart = document.querySelector(".cart-modal .action-btn .reset");
 
-// Variables for Hero Background
+// Variables
+let allMeals = [];
+let cart = [];
 let count = 0;
 const heroImagesSrc = [
   "hero-img2.jpg",
@@ -30,24 +33,29 @@ const heroImagesSrc = [
   "hero-img5.jpg",
   "hero-img1.jpg",
 ];
-
-// Variables for Meals Cards
-let allMeals = [];
 const categories = ["Breakfast", "Chicken", "Beef", "Seafood", "Dessert"];
 let currentCategory = "All";
 
-// Variables for Cart
-let cart = [];
-
-// Show Menu Function
+// Utility Fucntions
 function showMenu() {
   if (window.innerWidth < 768) {
     Overlay.classList.toggle("hidden");
     navUl.classList.toggle("translate-x-full");
   }
 }
-
-// Close anything when click on overlay
+function syncCart() {
+  localStorage.setItem("userCart", JSON.stringify(cart));
+  cartItems.innerHTML = cart.length;
+  cartCountHead.innerHTML = ` ${cart.length} `;
+}
+function messages(message, icon, color) {
+  return `
+      <div class="flex flex-col items-center justify-center text-gray-600 space-y-4 py-10 animate-in fade-in zoom-in duration-500">
+        <i class="${icon} ${color} text-6xl animate-bounce"></i>    
+        <p>${message}</p>
+      </div>
+    `;
+}
 function closeEverything() {
   Overlay.classList.add("hidden");
   navUl.classList.add("translate-x-full");
@@ -55,7 +63,7 @@ function closeEverything() {
   cartModal.classList.remove("scale-100", "opacity-100");
 }
 
-// Get Meals Function
+// Draw & Update Data
 async function getMeals() {
   // PlaceHolder
   let placeHolderHtml = "";
@@ -100,15 +108,17 @@ async function getMeals() {
     );
     const result = await Promise.all(request);
     allMeals = result.flat();
-    drawData(allMeals);
+    DrawMealsCards(allMeals);
   } catch (error) {
     mealsContainer.style.gridTemplateColumns = "1fr";
-    mealsContainer.innerHTML = `<p class="text-3xl mt-8 text-center text-gray-600 font-black">Can't load the menu!</p>`;
+    mealsContainer.innerHTML = messages(
+      "Can't load the menu!",
+      "fa-solid fa-triangle-exclamation",
+      "text-red-600",
+    );
   }
 }
-
-// Draw Meals Cards Function
-function drawData(allMeals) {
+function DrawMealsCards(allMeals) {
   let mealsHtml = "";
   allMeals.forEach((meal) => {
     mealsHtml += `
@@ -148,36 +158,13 @@ function drawData(allMeals) {
   });
   mealsContainer.innerHTML = mealsHtml;
 }
-
-// Search Meals Function
-function search() {
-  let filteredData;
-  if (currentCategory === "All") {
-    filteredData = allMeals.filter((e) =>
-      e.strMeal.toLowerCase().includes(searchMeals.value.toLowerCase().trim()),
-    );
-  } else {
-    filteredData = allMeals.filter((e) => e.categoryName === currentCategory);
-  }
-
-  filteredData = filteredData.filter((e) =>
-    e.strMeal.toLowerCase().includes(searchMeals.value.toLowerCase().trim()),
-  );
-  if (filteredData.length > 0) {
-    mealsContainer.style.gridTemplateColumns = "";
-    drawData(filteredData);
-  } else {
-    mealsContainer.style.gridTemplateColumns = "1fr";
-    mealsContainer.innerHTML = `<p class="text-3xl mt-8 text-center text-gray-600 font-black">Can't Found The Meal!</p>`;
-  }
-}
-
 function displayCart() {
+  syncCart();
   cartBody.innerHTML = "";
   let cartHtml = "";
   let totalPrice = 0;
-  cartCountHead.innerHTML = ` ${cart.length} `;
   if (cart.length) {
+    cartFooter.style.display = "block";
     cart.forEach((id) => {
       const newCartCheckout = allMeals.find((e) => e.idMeal === id);
       if (newCartCheckout) {
@@ -199,28 +186,73 @@ function displayCart() {
     cartBody.innerHTML = cartHtml;
     cartTotal.innerHTML = `${totalPrice.toFixed(2)}$`;
   } else {
-    cartBody.innerHTML = `<p class="text-red-700 text-2xl font-bold">Your Cart Is Empty!</p>`;
+    cartBody.innerHTML = messages(
+      "Your Cart Is Empty!",
+      "fa-solid fa-face-frown-open",
+      "text-gray-400",
+    );
+    cartFooter.style.display = "none";
     cartTotal.innerHTML = `0$`;
   }
 }
 
-// Start get meals
-getMeals();
+// Features Functions
+function search() {
+  let searchValue = searchMeals.value.toLowerCase().trim();
 
-// Events on Header
-MenuBtn.addEventListener("click", showMenu);
+  let filteredData = allMeals.filter((meal) => {
+    let searchByValue = meal.strMeal.toLowerCase().includes(searchValue);
+    let searchCategory =
+      currentCategory === "All" || meal.categoryName === currentCategory;
+    return searchByValue && searchCategory;
+  });
 
-Overlay.addEventListener("click", closeEverything);
+  if (filteredData.length > 0) {
+    mealsContainer.style.gridTemplateColumns = "";
+    DrawMealsCards(filteredData);
+  } else {
+    mealsContainer.style.gridTemplateColumns = "1fr";
+    mealsContainer.innerHTML = messages(
+      "Can't Found The Meal!",
+      "fa-solid fa-magnifying-glass-minus",
+      "text-gray-400",
+    );
+  }
+}
+function filterCategory(btn) {
+  filterBtns.forEach((btn) => btn.classList.remove("active-filter"));
+  btn.classList.add("active-filter");
+  currentCategory = btn.id;
+  searchMeals.value = "";
+  search();
+}
+function removeFromCart(mealId) {
+  let deletedIndex = cart.indexOf(mealId);
+  if (deletedIndex > -1) {
+    cart.splice(deletedIndex, 1);
+  }
+  displayCart();
+}
+function checkout() {
+  if (cart.length) {
+    cartFooter.style.display = "none";
+    cartBody.innerHTML = messages(
+      "Order Placed Successfully!",
+      "fa-solid fa-circle-check",
+      "text-green-500",
+    );
+    reset();
+    setTimeout(() => {
+      closeEverything();
+    }, 3000);
+  }
+}
+function reset() {
+  cart = [];
+  syncCart();
+}
 
-navLis.forEach((li) => {
-  li.addEventListener("click", showMenu);
-});
-
-navSearch.addEventListener("click", () => {
-  mealsSection.scrollIntoView({ behavior: "smooth" });
-});
-
-// Hero Background Change
+// Hero Image Change
 setInterval(() => {
   heroImage.style.opacity = 0;
   setTimeout(() => {
@@ -230,63 +262,49 @@ setInterval(() => {
   }, 500);
 }, 3000);
 
-// Event On Search Input
+// Events on Header
+MenuBtn.addEventListener("click", showMenu);
+Overlay.addEventListener("click", closeEverything);
+navLis.forEach((li) => {
+  li.addEventListener("click", showMenu);
+});
+navSearch.addEventListener("click", () => {
+  mealsSection.scrollIntoView({ behavior: "smooth" });
+});
 searchMeals.addEventListener("input", search);
-
-// Event on Filter Buttons
 filterBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
-    filterBtns.forEach((btn) => btn.classList.remove("active-filter"));
-    btn.classList.add("active-filter");
-    currentCategory = btn.id;
-    searchMeals.value = "";
-    search();
+    filterCategory(btn);
   });
 });
-
-// Event on Add To Cart Btn
 mealsContainer.addEventListener("click", (e) => {
-  if (e.target.closest(".add-to-cart-btn")) {
-    cart.push(e.target.closest(".add-to-cart-btn").closest(".meal-card").id);
-    cartItems.innerHTML = cart.length;
-    localStorage.setItem("userCart", JSON.stringify(cart));
+  let btn = e.target.closest(".add-to-cart-btn");
+  if (btn) {
+    cart.push(btn.closest(".meal-card").id);
+    syncCart();
   }
 });
-
-// Event on Cart Btn
 cartBtn.addEventListener("click", () => {
   Overlay.classList.remove("hidden");
   cartModal.classList.replace("scale-0", "scale-100");
   cartModal.classList.replace("opacity-0", "opacity-100");
   displayCart();
 });
-
-// Event To Close Modal
 closeCart.addEventListener("click", closeEverything);
-
-// Event To Remove Meal From Cart
 cartModal.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete-meal")) {
-    let value = e.target.closest(".cart-card").id;
-    let deletedIndex = cart.indexOf(value);
-    if (deletedIndex > -1) {
-      cart.splice(deletedIndex, 1);
-    }
-    localStorage.setItem("userCart", JSON.stringify(cart));
-    cartItems.innerHTML = cart.length;
-    cartCountHead.innerHTML = ` ${cart.length} `;
-    displayCart();
+    let mealId = e.target.closest(".cart-card").id;
+    removeFromCart(mealId);
   }
 });
-
-// Event To Reset Cart
+checkOutCart.addEventListener("click", checkout);
 resetCart.addEventListener("click", () => {
-  cart = [];
-  localStorage.removeItem("userCart");
+  reset();
   displayCart();
 });
 
+getMeals();
 onload = () => {
   cart = JSON.parse(localStorage.getItem("userCart")) || [];
-  cartItems.innerHTML = cart.length;
+  syncCart();
 };
