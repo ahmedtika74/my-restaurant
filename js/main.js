@@ -247,7 +247,7 @@ function showProduct(id) {
           <img
             src="${myProduct.strMealThumb}"
             alt="${myProduct.strMeal}"
-            class="rounded-2xl shadow-md w-[80%] md:w-[50%]"
+            class="rounded-2xl shadow-md w-[50%] md:w-[30%] mx-auto md:mx-0"
           />
           <div class="data flex flex-col justify-between md:px-5">
             <div class="top flex items-center justify-between gap-3 pt-5 pb-2 text-xl md:text-2xl font-black">
