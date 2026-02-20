@@ -85,7 +85,7 @@ function closeEverything() {
 function pageNumbersDisplay(allMeals) {
   const totalPages = Math.ceil(allMeals / mealsPerPage);
   let pageBtn = `
-      <button class="px-3 py-2 rounded-lg border transition-all ${currentPage === 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-primary hover:text-white"}" ${currentPage === 1 ? "disabled" : `onclick="changePage(${currentPage - 1})"`}>
+      <button  aria-label="Previous Page" class="px-3 py-2 rounded-lg border transition-all ${currentPage === 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-primary hover:text-white"}" ${currentPage === 1 ? "disabled" : `onclick="changePage(${currentPage - 1})"`}>
         <i class="fa-solid fa-chevron-left"></i>
       </button>
   `;
@@ -98,7 +98,7 @@ function pageNumbersDisplay(allMeals) {
     }
   }
   pageBtn += `
-      <button class="px-3 py-2 rounded-lg border transition-all ${currentPage === totalPages ? "opacity-30 cursor-not-allowed" : "hover:bg-primary hover:text-white "}" ${currentPage === totalPages ? "disabled" : `onclick="changePage(${currentPage + 1})"`}>
+      <button aria-label="Next Page" class="px-3 py-2 rounded-lg border transition-all ${currentPage === totalPages ? "opacity-30 cursor-not-allowed" : "hover:bg-primary hover:text-white "}" ${currentPage === totalPages ? "disabled" : `onclick="changePage(${currentPage + 1})"`}>
         <i class="fa-solid fa-chevron-right"></i>
       </button>
   `;
@@ -181,6 +181,7 @@ function DrawMealsCards(allMeals) {
                 src="${meal.strMealThumb}"
                 alt="${meal.strMeal}"
                 loading="lazy"
+                width="300" height="300"
                 class="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div class="text-primary absolute bottom-4 left-4 rounded-lg bg-white/90 px-3 py-1.5 font-black shadow-sm">
@@ -225,7 +226,7 @@ function displayCart() {
         totalPrice += parseFloat(newCartCheckout.price) * meal.amount;
         cartHtml += `
           <div id="${newCartCheckout.idMeal}" class="cart-card mb-3 flex items-center gap-3 justify-between rounded-2xl bg-gray-100 h-17.5 p-2 md:h-32 md:p-4 md:hover:bg-white md:hover:shadow-lg transition-all duration-300">
-              <img src="${newCartCheckout.strMealThumb}" alt="${newCartCheckout.strMeal}" class="h-10 w-10 rounded-xl md:h-24 md:w-24 md:rounded-2xl object-cover" />
+              <img width="300" height="300" src="${newCartCheckout.strMealThumb}" alt="${newCartCheckout.strMeal}" class="h-10 w-10 rounded-xl md:h-24 md:w-24 md:rounded-2xl object-cover" />
               <div class="data flex-1 flex flex-col md:flex-row md:items-center md:justify-between md:gap-10">
                   <h3 class="text-[12px] text-left font-bold md:text-xl md:w-1/3 leading-tight">${newCartCheckout.strMeal}</h3>
                   <div class="flex items-center justify-start gap-5 mt-1 md:mt-0 md:flex-1 md:justify-around">
@@ -262,6 +263,7 @@ function showProduct(id) {
   productContainer.innerHTML = `
           <div class="content p-2 md:mb-5 md:flex">
           <img
+            width="300" height="300"
             src="${myProduct.strMealThumb}"
             alt="${myProduct.strMeal}"
             class="rounded-2xl shadow-md w-[50%] md:w-[30%] mx-auto md:mx-0"

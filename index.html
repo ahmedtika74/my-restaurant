@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Restaurant website with Tailwind CSS and Vanilla JS">
+    <meta
+      name="description"
+      content="Restaurant website with Tailwind CSS and Vanilla JS"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Restaurant | Home</title>
     <link rel="stylesheet" href="./css/output.css" />
@@ -13,6 +16,10 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link rel="preconnect" href="https://www.themealdb.com" />
+    <link rel="dns-prefetch" href="https://www.themealdb.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
   </head>
   <body class="bg-main-bg text-main-text">
     <!-- OverLay -->
@@ -80,8 +87,9 @@
               doorstep.
             </p>
           </div>
-          <a href="#meals"
-            class="cta-btn block w-fit bg-primary md:bg-primary/80 md:hover:bg-primary text-main-bg mx-auto  rounded-2xl px-5 py-1.5 shadow-[0_1px_5px_0_#4f46e5] transition-colors duration-300"
+          <a
+            href="#meals"
+            class="cta-btn bg-primary md:bg-primary/80 md:hover:bg-primary text-main-bg mx-auto block w-fit rounded-2xl px-5 py-1.5 shadow-[0_1px_5px_0_#4f46e5] transition-colors duration-300"
           >
             Order Now
           </a>
@@ -91,6 +99,7 @@
             class="aspect-square w-[75%] rounded-2xl object-cover transition-opacity duration-1000"
             src="./image/hero-img1.jpg"
             alt=""
+            fetchpriority="high"
             id="hero-image"
           />
         </div>
@@ -143,15 +152,19 @@
     <!-- About -->
     <div id="about" class="scroll-mt-20 overflow-hidden bg-white py-15">
       <div class="container">
-        <div class="mb-20 grid grid-cols-1 items-center gap-8 md:gap-12 md:grid-cols-2">
+        <div
+          class="mb-20 grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12"
+        >
           <div class="image relative">
             <img
+              width="300"
+              height="300"
               src="./image/hero-img2.jpg"
               alt="About Section"
-              class="relative z-10 rounded-3xl shadow-2xl"
+              class="relative z-10 h-full w-full rounded-3xl shadow-2xl"
             />
             <div
-              class="bg-primary/10 absolute hidden -right-6 -bottom-6 z-0 h-full w-full rounded-3xl md:block"
+              class="bg-primary/10 absolute -right-6 -bottom-6 z-0 hidden h-full w-full rounded-3xl md:block"
             ></div>
           </div>
           <div class="content">
@@ -168,11 +181,11 @@
             </p>
             <div class="stats grid grid-cols-2 gap-6 text-center">
               <div class="stat-item">
-                <h4 class="text-primary text-3xl font-black">15+</h4>
+                <h2 class="text-primary text-3xl font-black">15+</h2>
                 <p class="text-primary/60 font-bold">Professional Chefs</p>
               </div>
               <div class="stat-item">
-                <h4 class="text-primary text-3xl font-black">50k+</h4>
+                <h2 class="text-primary text-3xl font-black">50k+</h2>
                 <p class="text-primary/60 font-bold">Happy Customers</p>
               </div>
             </div>
@@ -240,19 +253,28 @@
             quality and passion in every bite.
           </p>
           <div class="social flex gap-4 text-xl">
-            <a href="#" class="hover:text-primary transition-colors"
+            <a
+              href="#"
+              class="hover:text-primary transition-colors"
+              aria-label="Facebook"
               ><i class="fa-brands fa-facebook"></i
             ></a>
-            <a href="#" class="hover:text-primary transition-colors"
+            <a
+              href="#"
+              class="hover:text-primary transition-colors"
+              aria-label="Instagram"
               ><i class="fa-brands fa-instagram"></i
             ></a>
-            <a href="#" class="hover:text-primary transition-colors"
+            <a
+              href="#"
+              class="hover:text-primary transition-colors"
+              aria-label="Twitter"
               ><i class="fa-brands fa-x-twitter"></i
             ></a>
           </div>
         </div>
         <div>
-          <h4 class="mb-6 text-lg font-bold">Contact Us</h4>
+          <h2 class="mb-6 text-lg font-bold">Contact Us</h2>
           <ul class="space-y-4 text-sm text-gray-400">
             <li class="flex items-center gap-3">
               <i class="fa-solid fa-location-dot text-primary"></i>
@@ -269,7 +291,7 @@
           </ul>
         </div>
         <div>
-          <h4 class="mb-6 text-lg font-bold">Quick Links</h4>
+          <h2 class="mb-6 text-lg font-bold">Quick Links</h2>
           <ul class="space-y-4 text-sm text-gray-400">
             <li>
               <a href="#" class="hover:text-primary transition-colors">Home</a>
@@ -290,7 +312,7 @@
       <div class="container pt-8 text-center text-xs text-gray-500">
         <p>
           © 2026 My Restaurant. All rights reserved. Developed by
-          <a href="#" class="mt-2 inline-block font-black text-white md:mt-0"></a>
+          <a href="#" class="mt-2 inline-block font-black text-white md:mt-0">
             Ahmed Fouad</a
           >.
         </p>
@@ -333,7 +355,7 @@
 
     <!-- Meal Modal -->
     <div
-      class="meal-modal fixed top-1/2 left-1/2 z-50 w-[90%] max-h-[70vh] -translate-x-[50%] -translate-y-[45%] scale-0 rounded-3xl bg-white p-5 text-left opacity-0 shadow-lg transition-transform duration-300 lg:w-[70%]"
+      class="meal-modal fixed top-1/2 left-1/2 z-50 max-h-[70vh] w-[90%] -translate-x-[50%] -translate-y-[45%] scale-0 rounded-3xl bg-white p-5 text-left opacity-0 shadow-lg transition-transform duration-300 lg:w-[70%]"
     >
       <span
         class="close absolute -top-2 -right-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-red-500 font-black text-white shadow-2xl"
@@ -342,6 +364,6 @@
       <div class="product-container"></div>
     </div>
 
-    <script src="./js/main.js"></script>
+    <script src="./js/main.js" defer></script>
   </body>
 </html>
