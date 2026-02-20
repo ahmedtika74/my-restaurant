@@ -53,8 +53,18 @@ function showMenu() {
 }
 function syncCart() {
   localStorage.setItem("userCart", JSON.stringify(cart));
-  cartItems.innerHTML = cart.length;
-  cartCountHead.innerHTML = ` ${cart.length} `;
+  let amount = cart.reduce((total, meal) => total + meal.amount, 0);
+  cartItems.innerHTML = amount;
+  cartCountHead.innerHTML = ` ${amount} `;
+}
+function addItemToCart(mealId) {
+  let checkExist = cart.find((ele) => ele.id == mealId);
+  if (checkExist) {
+    checkExist.amount++;
+  } else {
+    cart.push({ id: mealId, amount: 1 });
+  }
+  syncCart();
 }
 function messages(message, icon, color) {
   return `
@@ -209,20 +219,27 @@ function displayCart() {
   let totalPrice = 0;
   if (cart.length) {
     cartFooter.style.display = "block";
-    cart.forEach((id) => {
-      const newCartCheckout = allMeals.find((e) => e.idMeal === id);
+    cart.forEach((meal) => {
+      const newCartCheckout = allMeals.find((e) => e.idMeal === meal.id);
       if (newCartCheckout) {
-        totalPrice += parseFloat(newCartCheckout.price);
+        totalPrice += parseFloat(newCartCheckout.price) * meal.amount;
         cartHtml += `
-          <div id="${newCartCheckout.idMeal}" class="cart-card mb-3 flex items-center justify-between rounded-2xl bg-gray-100 p-3">
-            <img src="${newCartCheckout.strMealThumb}" alt="${newCartCheckout.strMeal}" class="h-10 w-10 rounded-2xl md:h-20 md:w-20" />
-            <div class="data">
-              <h3 class="text-base font-bold md:text-xl">${newCartCheckout.strMeal}</h3>
-              <span class="text-[14px] md:text-base">${newCartCheckout.price}$</span>
-            </div>
-            <button class="delete-meal flex h-7 w-7 items-center justify-center bg-red-500 font-black text-white">
-              X
-            </button>
+          <div id="${newCartCheckout.idMeal}" class="cart-card mb-3 flex items-center gap-3 justify-between rounded-2xl bg-gray-100 h-17.5 p-2 md:h-32 md:p-4 md:hover:bg-white md:hover:shadow-lg transition-all duration-300">
+              <img src="${newCartCheckout.strMealThumb}" alt="${newCartCheckout.strMeal}" class="h-10 w-10 rounded-xl md:h-24 md:w-24 md:rounded-2xl object-cover" />
+              <div class="data flex-1 flex flex-col md:flex-row md:items-center md:justify-between md:gap-10">
+                  <h3 class="text-[12px] text-left font-bold md:text-xl md:w-1/3 leading-tight">${newCartCheckout.strMeal}</h3>
+                  <div class="flex items-center justify-start gap-5 mt-1 md:mt-0 md:flex-1 md:justify-around">
+                      <span class="text-[12px] text-primary font-bold md:text-xl md:w-20">${newCartCheckout.price}$</span>
+                      <div class="text-[12px] flex-1 text-white flex items-center justify-start gap-3 md:gap-5">
+                          <button onclick="changeAmount('${newCartCheckout.idMeal}', 1)" class="bg-green-500 w-4 h-4 flex items-center justify-center cursor-pointer rounded-full md:w-8 md:h-8 md:text-lg"><i class="fa-solid fa-plus"></i></button>
+                          <span class="text-base text-main-text font-black md:text-xl">${meal.amount}</span>
+                          <button onclick="changeAmount('${newCartCheckout.idMeal}', -1)" class="bg-red-500 w-4 h-4 flex items-center justify-center cursor-pointer rounded-full md:w-8 md:h-8 md:text-lg"><i class="fa-solid fa-minus"></i></button>
+                      </div>
+                  </div>
+              </div>
+              <button onclick="removeFromCart('${newCartCheckout.idMeal}')" class="delete-meal flex h-7 w-7 items-center justify-center bg-red-500 font-black text-white rounded-lg md:h-10 md:w-10 md:bg-transparent md:text-red-500 md:hover:bg-red-500 md:hover:text-white transition-all">
+                  <i class="fa-solid fa-trash-can hidden md:block"></i>
+              </button>
           </div>
         `;
       }
@@ -305,10 +322,31 @@ function filterCategory(btn) {
   currentPage = 1;
   search();
 }
+function addToCart(e) {
+  const btn = e.target.closest(".add-to-cart-btn");
+  const card = e.target.closest(".meal-card");
+
+  if (!card) {
+    return;
+  } else if (btn) {
+    addItemToCart(card.id);
+  } else {
+    toggleModal(mealModal);
+    showProduct(card.id);
+  }
+}
 function removeFromCart(mealId) {
-  let deletedIndex = cart.indexOf(mealId);
-  if (deletedIndex > -1) {
-    cart.splice(deletedIndex, 1);
+  cart = cart.filter((meal) => meal.id !== mealId);
+  displayCart();
+}
+function changeAmount(id, action) {
+  let meal = cart.find((meal) => meal.id == id);
+  if (meal) {
+    meal.amount += action;
+    if (meal.amount <= 0) {
+      removeFromCart(id);
+      return;
+    }
   }
   displayCart();
 }
@@ -370,17 +408,9 @@ filterBtns.forEach((btn) => {
     filterCategory(btn);
   });
 });
+
 mealsContainer.addEventListener("click", (e) => {
-  let btn = e.target.closest(".add-to-cart-btn");
-  if (btn) {
-    cart.push(btn.closest(".meal-card").id);
-    syncCart();
-  }
-  const card = e.target.closest(".meal-card");
-  if (card && !btn) {
-    toggleModal(mealModal);
-    showProduct(card.id);
-  }
+  addToCart(e);
 });
 closeProduct.addEventListener("click", closeEverything);
 cartBtn.addEventListener("click", () => {
@@ -394,11 +424,12 @@ cartModal.addEventListener("click", (e) => {
     removeFromCart(mealId);
   }
 });
+
 productContainer.addEventListener("click", (e) => {
   let btn = e.target.closest(".order-now-btn");
   if (btn) {
-    cart.push(btn.closest(".product-container").id);
-    syncCart();
+    addItemToCart(productContainer.id);
+    closeEverything();
   }
 });
 checkOutCart.addEventListener("click", checkout);
