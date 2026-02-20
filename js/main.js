@@ -440,8 +440,17 @@ resetCart.addEventListener("click", () => {
   displayCart();
 });
 
-getMeals();
+
 onload = () => {
   cart = JSON.parse(localStorage.getItem("userCart")) || [];
   syncCart();
 };
+getMeals();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('Service Worker Registered'))
+      .catch(err => console.log('Service Worker Failed', err));
+  });
+}
