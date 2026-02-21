@@ -44,7 +44,7 @@ let currentCategory = "All";
 let currentPage = 1;
 const mealsPerPage = innerWidth < 768 ? 5 : 12;
 
-// Utility Fucntions
+// Utility Functions
 function showMenu() {
   if (window.innerWidth < 768) {
     Overlay.classList.toggle("hidden");
@@ -309,7 +309,7 @@ function search() {
   } else {
     mealsContainer.style.gridTemplateColumns = "1fr";
     mealsContainer.innerHTML = messages(
-      "Can't Found The Meal!",
+      "Couldn't Find The Meal!",
       "fa-solid fa-magnifying-glass-minus",
       "text-gray-400",
     );
